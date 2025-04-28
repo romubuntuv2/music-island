@@ -5,9 +5,10 @@ import useMouseIntersect from "../../../hooks/MouseIntersect";
 import { useControlsStore } from "../../../stores/ControlsStore";
 import { useMotionValue, useSpring, useTransform } from "motion/react";
 import { useMusicStore } from "../../../stores/MusicStore";
-import { StepNoteType } from "reactronica";
+import { Instrument, Song, StepNoteType, Track } from "reactronica";
 import { IInstr3D } from "../../../interfaces/Interfaces";
 import House from "../../../models/House";
+
 
 
 const gamme = [
@@ -23,14 +24,6 @@ const GrabItem = (
     {inst3D, initX, initZ}:{inst3D:IInstr3D, initX:number, initZ:number}
 ) => {
 
-    const getModel = () => {
-        switch (inst3D.modelType) {
-            case 'house':
-                return <House color={colorNote()} placedStep={placedStep} />
-            default:
-                return <></>
-        }
-    }
 
     const ref = useRef<Group>(null)
     const parentRef = useRef<Group>(null)
@@ -47,12 +40,19 @@ const GrabItem = (
         return colors[currentNoteIndex]
     }
  
+    const [dynamicNotes, setDynamicNotes] = useState<StepNoteType[]>([])
+
     const {setStepsByType, setNullStepsByType} = useMusicStore();
     const {setIsGlobalDragging, isGlobalDragging, passGrabNewPos} = useControlsStore();
     const {motionPointerPos} = useMouseIntersect();
     
 
     //#region MOTION VALUE
+    const yScale = useMotionValue(0);
+    const springYScale = useMotionValue(0);
+    const scale = useMotionValue(0.9);
+    const springScale = useSpring(scale);
+
     const savedPosX = useMotionValue(initX);
     const savedPosY = useMotionValue(0);
     const savedPosZ = useMotionValue(initZ);
@@ -87,10 +87,21 @@ const GrabItem = (
         }
     }
 
+    const onEnter= ()=> {
+        scale.set(.9)
+        yScale.set(.1)
+    }
+
+    const onLeave = ()=> {
+        scale.set(.85)
+        yScale.set(0)
+    }
+
     const handleDragStart = () => {
         if(isNote) {
             setNullStepsByType(savedPosX.get()+8, inst3D.instrumentType);
         }
+        setDynamicNotes([])
         setIsNote(false);
         setIsDragging(true);
         setPlacedStep(null);
@@ -111,6 +122,7 @@ const GrabItem = (
             savedPosY.set(1.5);
             savedPosZ.set(passGrabNewPos.z);
             parentRef.current = passGrabNewPos.ref;
+            setDynamicNotes([currentNote()])
             setStepsByType(currentNote(),passGrabNewPos.x+8, inst3D.instrumentType)
             setPlacedStep(passGrabNewPos.x+8);
             setIsDragging(false);
@@ -138,25 +150,48 @@ const GrabItem = (
     useFrame(()=> {
         if(ref == null || ref.current == null) return;
         ref.current.position.x = springX.get();
-        ref.current.position.y = springY.get();
+        ref.current.position.y = springY.get() + springYScale.get();
         ref.current.position.z = springZ.get();
 
         if(parentRef.current !== null) {
             if(parentRef.current.parent === null) return;
-            ref.current.position.y = springY.get() + parentRef.current.position.y;
+            ref.current.position.y = springY.get() + parentRef.current.position.y + springYScale.get();;
+            ref.current.scale.x = springScale.get();
+            ref.current.scale.y = springScale.get();
+            ref.current.scale.z = springScale.get();
+
         }
     })
 
 
+    const getModel = () => {
+        switch (inst3D.modelType) {
+            case 'house':
+                return <House color={colorNote()} placedStep={placedStep} />
+            default:
+                return <></>
+        }
+    }
     
     return <>
     <group castShadow ref={ref} name="grab-item"
-    onPointerDown={onClick}  >
-        {/* {inst3D.model} */}
-
+    onPointerDown={onClick} onPointerEnter={()=>onEnter()} onPointerLeave={onLeave}  >
         {getModel()}
-
     </group>
+    <Song>
+        <Track>
+        <Instrument type='sampler' polyphony={7}
+        notes={inst3D.instrumentType==="bells"?dynamicNotes:[]}
+        samples={{
+        C3: '/sounds/bells/bell-C.wav',
+        D3: '/sounds/bells/bell-D.wav',
+        E3: '/sounds/bells/bell-E.wav',
+        G3: '/sounds/bells/bell-G.wav',
+        A3: '/sounds/bells/bell-A.wav',
+        }}
+        />
+        </Track>
+    </Song>
     </>
 
 

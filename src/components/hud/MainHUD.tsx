@@ -12,9 +12,6 @@ const MainHUD = () => {
     <Button left={0} onClick={()=> toogleIsPlayer()} >{isPlaying?"Stop":"Play"}</Button>
     <Button left={50} onClick={()=> setTempo(tempo+10)} >TEMPO++</Button>
     <Button left={100} onClick={()=> setTempo(tempo-10)} >TEMPO--</Button>
-
-
-
   </>
 
 }

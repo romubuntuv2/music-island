@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import GrabItem from './GrabItem';
 import { IGrabItem, IInstr3D } from '../../../interfaces/Interfaces';
 import { ThreeEvent } from '@react-three/fiber';

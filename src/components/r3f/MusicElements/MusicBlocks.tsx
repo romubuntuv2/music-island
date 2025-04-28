@@ -1,5 +1,5 @@
 import { Clone, useGLTF } from '@react-three/drei'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Group, Object3D } from 'three'
 import { IMusicBoxEl, useEnvStore } from '../../../stores/EnvStore'
 import { useMusicStore } from '../../../stores/MusicStore'
@@ -26,12 +26,14 @@ const MusicBlock = (
 
 const {nodes} = useGLTF('/models/block.glb')
 const meshRef = useRef<Group>(null);
+const [isClick, setIsClick] = useState(false);
 const {currentStep, isPlaying} = useMusicStore();
 const {isGlobalDragging, setIsGlobalDragging, setPassGrabNewPos} = useControlsStore();
 
 const onClickMesh = (e:ThreeEvent<MouseEvent>) => {
   if(meshRef.current === null) return;
   e.stopPropagation();
+  setIsClick(true);
   if(isGlobalDragging) {
     setPassGrabNewPos(item.x,item.z, meshRef.current);
     setIsGlobalDragging(false);
@@ -47,15 +49,19 @@ const y = useTransform(()=> {
     if(step == item.x+1) return item.y+0.3
     if(step == item.x+2) return item.y+0.1
     return item.y
+  } else if(isClick) {
+    return item.y - .25
   } else {
     return item.y
   }
+  
 });
 const springY = useSpring(y as MotionValue<number>, {damping: 20, stiffness: 100});
 
 
 useFrame(()=> {
   if(meshRef == null || meshRef.current == null) return;
+  if(meshRef.current.position.y == item.y - .25) setIsClick(false);
   meshRef.current.position.y = springY.get();
 })
 

@@ -1,4 +1,4 @@
-import { StepNoteType, StepType } from "reactronica";
+import { StepNoteType } from "reactronica";
 import { create } from "zustand";
 
 export interface IMusicStore {
@@ -9,8 +9,8 @@ export interface IMusicStore {
     setTempo: (tempo: number) => void;
 
     steps: {
-        synth: (StepType[] | null)[];
-        bells:(StepType[] |null)[];
+        synth: (StepNoteType[] | null)[];
+        bells:(StepNoteType[] |null)[];
     };
     setNullStepsByType:(index:number,type:string )=> void,
     setStepsByType:(note: StepNoteType | null, index: number, type:string) => void,
@@ -65,12 +65,13 @@ export const useMusicStore = create<IMusicStore>((set, get) => ({
         }
     },
     setStepsSynth:(note: StepNoteType | null, index: number) => {
-        // console.log(note);
-        // const { steps:newSteps } = get();
-        // const newStepsSynth = [...newSteps.synth];
-        // newStepsSynth[index] = note;
-        // newSteps.synth = newStepsSynth;
-        // set({ steps: newSteps });
+        const { steps:newSteps } = get();
+        const newStepsSynth = [...newSteps.synth];
+        if(note == null) newStepsSynth[index] = null; /// ATTENTION, A PERFECTIONNER POUR LA NOTE
+        else if(note != null && newStepsSynth[index] == null)  newStepsSynth[index] = [note];
+        else if(note != null && newStepsSynth[index] != null)  newStepsSynth[index] = [... newStepsSynth[index], note]
+        newSteps.synth = newStepsSynth;
+        set({ steps: newSteps });
     },
     setStepsBells:(note: StepNoteType | null, index: number) => {
         const { steps:newSteps } = get();
