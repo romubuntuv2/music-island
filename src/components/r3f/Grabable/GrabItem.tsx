@@ -26,7 +26,7 @@ const GrabItem = (
     const getModel = () => {
         switch (inst3D.modelType) {
             case 'house':
-                return <House color={colorNote()} />
+                return <House color={colorNote()} placedStep={placedStep} />
             default:
                 return <></>
         }
@@ -37,10 +37,11 @@ const GrabItem = (
 
 
     const [isDragging, setIsDragging] = useState(false);
+    const [placedStep, setPlacedStep] = useState<number|null>(null);
     const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
     const [isNote, setIsNote] = useState(false)
     const currentNote = () => {
-        return {name:gamme[currentNoteIndex], duration:0.5} as StepNoteType
+        return {name:gamme[currentNoteIndex], duration:1.5} as StepNoteType
     }
     const colorNote = () => {
         return colors[currentNoteIndex]
@@ -49,7 +50,7 @@ const GrabItem = (
     const {setStepsByType, setNullStepsByType} = useMusicStore();
     const {setIsGlobalDragging, isGlobalDragging, passGrabNewPos} = useControlsStore();
     const {motionPointerPos} = useMouseIntersect();
-
+    
 
     //#region MOTION VALUE
     const savedPosX = useMotionValue(initX);
@@ -92,6 +93,7 @@ const GrabItem = (
         }
         setIsNote(false);
         setIsDragging(true);
+        setPlacedStep(null);
         setIsGlobalDragging(true);
         parentRef.current = null
     }
@@ -106,10 +108,11 @@ const GrabItem = (
         } else {
             if(passGrabNewPos.ref === null) return;
             savedPosX.set(passGrabNewPos.x);
-            savedPosY.set(1);
+            savedPosY.set(1.5);
             savedPosZ.set(passGrabNewPos.z);
             parentRef.current = passGrabNewPos.ref;
             setStepsByType(currentNote(),passGrabNewPos.x+8, inst3D.instrumentType)
+            setPlacedStep(passGrabNewPos.x+8);
             setIsDragging(false);
             setIsNote(true);
         }

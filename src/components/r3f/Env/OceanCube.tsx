@@ -18,7 +18,7 @@ const OceanCube = (
 
   useFrame(()=> {
     if(ref.current == null) return;
-    // ref.current.position.y = Math.sin(timeTransform.get())*(-.5+item.scale)*0.2;
+    ref.current.position.y = Math.sin(timeTransform.get())*(-.5+item.scale)*0.2;
   })
 
 

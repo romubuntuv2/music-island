@@ -41,11 +41,11 @@ const onClickMesh = (e:ThreeEvent<MouseEvent>) => {
 const y = useTransform(()=> {
   const step = currentStep - 8
   if(isPlaying) {
-    if(step == item.x-2) return item.y+.05
-    if(step == item.x-1) return item.y+.1
-    if(step == item.x) return item.y+1
-    if(step == item.x+1) return item.y+0.4
-    if(step == item.x+2) return item.y+0.2
+    if(step == item.x-2) return item.y+.025
+    if(step == item.x-1) return item.y+.05
+    if(step == item.x) return item.y+.5
+    if(step == item.x+1) return item.y+0.3
+    if(step == item.x+2) return item.y+0.1
     return item.y
   } else {
     return item.y
