@@ -1,0 +1,168 @@
+import { ThreeEvent, useFrame } from "@react-three/fiber";
+import { useEffect, useRef, useState } from "react";
+import { Group} from "three";
+import useMouseIntersect from "../../../hooks/MouseIntersect";
+import { useControlsStore } from "../../../stores/ControlsStore";
+import { useMotionValue, useSpring, useTransform } from "motion/react";
+import { useMusicStore } from "../../../stores/MusicStore";
+import { StepNoteType } from "reactronica";
+import { IInstr3D } from "../../../interfaces/Interfaces";
+import House from "../../../models/House";
+
+
+const gamme = [
+    "C3", "D3","E3","G3","A3"
+]
+
+const colors = [
+    'red','green','blue','purple', 'black'
+]
+
+
+const GrabItem = (
+    {inst3D, initX, initZ}:{inst3D:IInstr3D, initX:number, initZ:number}
+) => {
+
+    const getModel = () => {
+        switch (inst3D.modelType) {
+            case 'house':
+                return <House color={colorNote()} />
+            default:
+                return <></>
+        }
+    }
+
+    const ref = useRef<Group>(null)
+    const parentRef = useRef<Group>(null)
+
+
+    const [isDragging, setIsDragging] = useState(false);
+    const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
+    const [isNote, setIsNote] = useState(false)
+    const currentNote = () => {
+        return {name:gamme[currentNoteIndex], duration:0.5} as StepNoteType
+    }
+    const colorNote = () => {
+        return colors[currentNoteIndex]
+    }
+ 
+    const {setStepsByType, setNullStepsByType} = useMusicStore();
+    const {setIsGlobalDragging, isGlobalDragging, passGrabNewPos} = useControlsStore();
+    const {motionPointerPos} = useMouseIntersect();
+
+
+    //#region MOTION VALUE
+    const savedPosX = useMotionValue(initX);
+    const savedPosY = useMotionValue(0);
+    const savedPosZ = useMotionValue(initZ);
+    const posX = useTransform(()=> {
+        if(isDragging) {
+            return motionPointerPos.get().x
+        } else return savedPosX.get()
+    });
+    const springX = useSpring(posX, { stiffness: 100, damping: 20 });
+    const posY = useTransform(()=> {
+        if(isDragging) {
+            return 5
+        } else return savedPosY.get()
+    });
+    const springY = useSpring(posY, { stiffness: 100, damping: 20 });
+    const posZ = useTransform(()=> {
+        if(isDragging) {
+            return motionPointerPos.get().z
+        } else return savedPosZ.get()
+    });
+    const springZ = useSpring(posZ, { stiffness: 100, damping: 20 });
+    //#endregion
+
+
+    //#region HANDLE FUNCTIONS
+    const onClick = (e:ThreeEvent<MouseEvent>)=> {
+        e.stopPropagation()
+        if(e.buttons == 1) {
+            handleDragStart();
+        } else if (e.buttons == 2) {
+            handleChangeNote();
+        }
+    }
+
+    const handleDragStart = () => {
+        if(isNote) {
+            setNullStepsByType(savedPosX.get()+8, inst3D.instrumentType);
+        }
+        setIsNote(false);
+        setIsDragging(true);
+        setIsGlobalDragging(true);
+        parentRef.current = null
+    }
+
+    const handleDragEnd = () => {
+        if(passGrabNewPos.x == 200 && passGrabNewPos.z == 200 && passGrabNewPos.ref == null) {
+            savedPosY.set(0);
+            savedPosX.set(springX.get())
+            savedPosZ.set(springZ.get())
+            parentRef.current = null;
+            setIsDragging(false);
+        } else {
+            if(passGrabNewPos.ref === null) return;
+            savedPosX.set(passGrabNewPos.x);
+            savedPosY.set(1);
+            savedPosZ.set(passGrabNewPos.z);
+            parentRef.current = passGrabNewPos.ref;
+            setStepsByType(currentNote(),passGrabNewPos.x+8, inst3D.instrumentType)
+            setIsDragging(false);
+            setIsNote(true);
+        }
+    }
+
+    const handleChangeNote = () => {
+        let newNoteIndex = currentNoteIndex;
+        while(newNoteIndex=== currentNoteIndex) {
+            newNoteIndex = Math.floor(Math.random()*(gamme.length-1));
+        }
+        setCurrentNoteIndex(newNoteIndex)
+        setStepsByType(currentNote(),savedPosX.get()+8, inst3D.instrumentType)
+    }
+    //#endregion
+
+
+    useEffect(()=> {
+        if(!isGlobalDragging && isDragging)  {
+            handleDragEnd();
+        }
+    },[isGlobalDragging])
+
+    useFrame(()=> {
+        if(ref == null || ref.current == null) return;
+        ref.current.position.x = springX.get();
+        ref.current.position.y = springY.get();
+        ref.current.position.z = springZ.get();
+
+        if(parentRef.current !== null) {
+            if(parentRef.current.parent === null) return;
+            ref.current.position.y = springY.get() + parentRef.current.position.y;
+        }
+    })
+
+
+    
+    return <>
+    <group castShadow ref={ref} name="grab-item"
+    onPointerDown={onClick}  >
+        {/* {inst3D.model} */}
+
+        {getModel()}
+
+    </group>
+    </>
+
+
+
+}
+
+export default GrabItem
+
+
+
+
+
