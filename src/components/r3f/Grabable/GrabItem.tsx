@@ -6,11 +6,11 @@ import { useControlsStore } from "../../../stores/ControlsStore";
 import { useMotionValue, useSpring, useTransform } from "motion/react";
 import { useMusicStore } from "../../../stores/MusicStore";
 import { Instrument, Song, StepNoteType, Track } from "reactronica";
-import { IInstr3D } from "../../../interfaces/Interfaces";
 import House from "../../../models/House";
 import { useSFXStore } from "../../../stores/SFXStore";
 import { useGammeStore } from "../../../stores/GammeStore";
 import Tree from "../../../models/Tree";
+import { IInstr3D } from "./GenGrabItems";
 
 
 
@@ -59,7 +59,7 @@ const GrabItem = (
     const springScale = useSpring(scale);
 
     const savedPosX = useMotionValue(initX);
-    const savedPosY = useMotionValue(0);
+    const savedPosY = useMotionValue(-3);
     const savedPosZ = useMotionValue(initZ);
     const posX = useTransform(()=> {
         if(isDragging) {
@@ -120,7 +120,7 @@ const GrabItem = (
     const handleDragEnd = () => {
         play('swipe')
         if(passGrabNewPos.x == 200 && passGrabNewPos.z == 200 && passGrabNewPos.ref == null) {
-            savedPosY.set(0);
+            savedPosY.set(-3);
             savedPosX.set(springX.get())
             savedPosZ.set(springZ.get())
             parentRef.current = null;
@@ -128,7 +128,7 @@ const GrabItem = (
         } else {
             if(passGrabNewPos.ref === null) return;
             savedPosX.set(passGrabNewPos.x);
-            savedPosY.set(1.5);
+            savedPosY.set(0);
             savedPosZ.set(passGrabNewPos.z);
             parentRef.current = passGrabNewPos.ref;
             setDynamicNotes([currentNote()])

@@ -48,8 +48,8 @@ const Tree = (
     })
 
 
-  return <group ref={groupRef}>
-  <Clone
+  return <group ref={groupRef} scale={0.4} position={[0,-0.6,0]} >
+  <Clone  
   object={[nodes.Base, nodes.LeavesA,nodes.LeavesB,nodes.LeavesC,]} 
   inject={(object) => object.name.includes("Leaves") ? <meshStandardMaterial color={color} /> :<></>
 } 

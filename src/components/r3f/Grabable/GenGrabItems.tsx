@@ -1,7 +1,20 @@
 import { useState } from 'react'
 import GrabItem from './GrabItem';
-import { IGrabItem, IInstr3D } from '../../../interfaces/Interfaces';
 import { ThreeEvent } from '@react-three/fiber';
+
+
+export interface IInstr3D {
+  instrumentType:string,
+  modelType:string
+}
+
+export interface IGrabItem {
+  id:number,
+  instr3D:IInstr3D,
+  initX:number,
+  initZ:number
+}
+
 
 const instr3D_A:IInstr3D = {
   instrumentType:'bells',
@@ -13,6 +26,7 @@ const instr3D_B:IInstr3D = {
 }
 
 const grabItem_A:IGrabItem =  {
+    id:0,
     instr3D:instr3D_B,
     initX:20,
     initZ:20
@@ -32,6 +46,7 @@ const GenGrabItems = () => {
         const x = 16+(Math.random()*10);
         const z = 16+(Math.random()*10);
         const newGrabItem:IGrabItem = {
+            id:1, /// GENERATE NEW IDS
             initX:x, initZ:z,
             instr3D:instr3D_A
         }

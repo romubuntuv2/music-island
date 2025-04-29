@@ -1,6 +1,27 @@
 import { StepNoteType } from "reactronica";
 import { create } from "zustand";
 
+interface IGamme {
+    color:string, 
+    bellsNote:StepNoteType[]
+}
+
+interface IStep {
+    
+}
+
+const Gamme1:IGamme = {
+    color:'#3185FC',
+    bellsNote:[{name:"C3",duration:0.5}, {name:"D3",duration:0.5},{name:"E3",duration:0.5},{name:"G3",duration:0.5},{name:"A3",duration:0.5}]
+}
+const Gamme2:IGamme = {
+    color:'#d74cde',
+    bellsNote:[{name:"E3",duration:0.5}, {name:"G3",duration:0.5},{name:"A3",duration:0.5},{name:"B3",duration:0.5},{name:"D4",duration:0.5}]
+}
+
+
+
+
 export interface IMusicStore {
     isPlaying: boolean;
     toogleIsPlayer: () => void;
@@ -20,6 +41,11 @@ export interface IMusicStore {
 
     currentStep: number;
     setCurrentStep: (step: number) => void;
+
+    gammeIndex:number, 
+    allGammes:IGamme[]
+    toggleGamme: () => void,
+    getColor:()=> string,
 
 }
 
@@ -89,15 +115,26 @@ export const useMusicStore = create<IMusicStore>((set, get) => ({
     },
 
 
-
-
-
-    
-
-
     currentStep:0,
     setCurrentStep: (step: number) => {
         set({ currentStep: step });
+    },
+
+
+    gammeIndex:0,
+    allGammes:[Gamme1, Gamme2],
+    toggleGamme: () => {
+        const {gammeIndex, allGammes} = get()
+        let newIndex = gammeIndex;
+        while(newIndex == gammeIndex) {
+            newIndex = Math.round(Math.random()*(allGammes.length-1))
+        }
+        set({gammeIndex:newIndex})
+    },
+    getColor:()=> {
+        const {gammeIndex, allGammes} = get()
+        const currentGamme = allGammes[gammeIndex]
+        return currentGamme.color
     },
 
 

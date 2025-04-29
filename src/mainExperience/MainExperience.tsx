@@ -5,13 +5,13 @@ import { PerformanceMonitor } from "@react-three/drei"
 import Island from "../components/r3f/Island"
 import { Suspense, useEffect } from "react"
 import { useSFXStore } from "../stores/SFXStore"
-import { useGammeStore } from "../stores/GammeStore"
+import { useMusicStore } from "../stores/MusicStore"
 
 
 const MainExperience = () => {
 
 
-    const {getColor} = useGammeStore();
+    const {getColor} = useMusicStore();
     const {play} = useSFXStore();
 
     useEffect(()=> {

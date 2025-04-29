@@ -1,11 +1,11 @@
 
 import { useGLTF } from '@react-three/drei'
 import { Mesh } from 'three'
-import { useGammeStore } from '../stores/GammeStore'
 import { ThreeEvent, useFrame } from '@react-three/fiber';
 import { useSFXStore } from '../stores/SFXStore';
 import { useRef } from 'react';
 import { MotionValue, useMotionValue, useSpring, useTime, useTransform } from 'motion/react';
+import { useMusicStore } from '../stores/MusicStore';
 
 const GammeButton= () => {
 
@@ -14,7 +14,7 @@ const GammeButton= () => {
 
     const { nodes, materials } = useGLTF('/models/gammeButton.glb')
 
-    const {toggleGamme} = useGammeStore();
+    const {toggleGamme} = useMusicStore();
     const {play, stop} = useSFXStore();
 
     const time = useTime();
@@ -49,7 +49,7 @@ const GammeButton= () => {
     })
 
     return <group ref={groupRef} 
-        position={[2, -1, 14]}
+        position={[2, -3, 14]}
         onPointerDown={onClick} dispose={null}>
         <mesh
         castShadow

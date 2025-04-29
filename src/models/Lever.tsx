@@ -58,7 +58,7 @@ const Lever = () => {
   return (
     <group ref={groupRef}
     onPointerDown={handleClick}
-    position={[0,-2,12]} dispose={null}>
+    position={[0,-3,12]} dispose={null}>
       <mesh
         castShadow
         receiveShadow

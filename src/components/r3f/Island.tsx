@@ -59,8 +59,10 @@ const Island = () => {
 
       <EnvControls/>
 
+      <group position={[0,-1.5,0]} >
       <EnvIsland />
       <MusicBlocks />
+      </group>
 
       <GenGrabItems />
 

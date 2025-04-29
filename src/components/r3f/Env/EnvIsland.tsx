@@ -31,7 +31,7 @@ const EnvIsland = () => {
 
     <group position={[0,-1,0]} receiveShadow  onPointerDown={(e)=> e.stopPropagation()} >
     <Instances >
-      <boxGeometry args={[0.95,0.5,0.95]} />
+      <boxGeometry args={[0.95,1,0.95]} />
       <meshStandardMaterial color={"white"} />
       {ocean.map((item, index) => {
         return <OceanCube item={item} key={index} index={index} />
