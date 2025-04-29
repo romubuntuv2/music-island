@@ -24,11 +24,16 @@ export interface IMusicStore {
 }
 
 
-export const useMusicStore = create<IMusicStore>((set, get) => ({
+export const useMusicStore = create<IMusicStore>((set, get) => ({ 
     isPlaying: false,
     toogleIsPlayer: () => {
-        const { isPlaying } = get();
-        set({ isPlaying: !isPlaying})
+        const { isPlaying, currentStep} = get();
+        const newIsPlaying = !isPlaying
+        let current = currentStep;
+        if(!newIsPlaying) {
+            current = 0
+        }
+        set({ isPlaying: newIsPlaying, currentStep:current})
     },
     tempo: 120,
     setTempo: (tempo: number) => {set({ tempo })},

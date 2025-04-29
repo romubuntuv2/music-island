@@ -1,6 +1,6 @@
 import { Instances } from '@react-three/drei'
 
-import { Base, Geometry, Subtraction } from '@react-three/csg';
+
 import { useEnvStore } from '../../../stores/EnvStore';
 import OceanCube from './OceanCube';
 
@@ -15,7 +15,7 @@ const EnvIsland = () => {
 
 
   return <>
-
+{/* 
     <mesh onPointerDown={(e)=> e.stopPropagation()}  scale={[21,2,21]} position={[-.5,0,-.5]} > 
       <meshStandardMaterial color={'orange'} />
       <Geometry >
@@ -26,10 +26,10 @@ const EnvIsland = () => {
         <boxGeometry />
       </Subtraction>
       </Geometry>
-    </mesh>
+    </mesh> */}
 
 
-    <group receiveShadow  onPointerDown={(e)=> e.stopPropagation()} >
+    <group position={[0,-1,0]} receiveShadow  onPointerDown={(e)=> e.stopPropagation()} >
     <Instances >
       <boxGeometry args={[0.95,0.5,0.95]} />
       <meshStandardMaterial color={"white"} />

@@ -11,7 +11,6 @@ const SongIsland = () => {
     <Track //SYNTH TRACK  
       steps={steps.synth}
       onStepPlay={(_, index) => {
-        console.log(index);
         setCurrentStep(index)
       }}>
     <Instrument type='synth' />  

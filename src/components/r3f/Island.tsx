@@ -1,11 +1,12 @@
 import { Environment, OrbitControls, Stage } from "@react-three/drei"
 import { useControlsStore } from "../../stores/ControlsStore"
-import { ThreeEvent } from "@react-three/fiber"
-import { useEnvStore } from "../../stores/EnvStore"
+import { ThreeEvent, useThree } from "@react-three/fiber"
 import { useEffect } from "react"
 import GenGrabItems from "./Grabable/GenGrabItems"
 import MusicBlocks from "./MusicElements/MusicBlocks"
 import EnvIsland from "./Env/EnvIsland"
+import EnvControls from "./Env/EnvControls"
+
 
 
 
@@ -13,12 +14,19 @@ import EnvIsland from "./Env/EnvIsland"
 
 const Island = () => {
 
-  const {initEnv} = useEnvStore();
+  const {camera} = useThree();
+
   useEffect(()=> {
-    initEnv();
+    camera.position.x = -10
+    camera.position.y =16
+    camera.position.z = 20
   },[])
 
-  const {isGlobalDragging, setIsGlobalDragging,setPassGrabNewPos} = useControlsStore();
+
+
+
+
+  const {isGlobalDragging, setIsGlobalDragging,setPassGrabNewPos, movingOrbits, setMovingOrbits, click} = useControlsStore();
 
   const onVoidClick = (e:ThreeEvent<MouseEvent>)=> {
     e.stopPropagation();
@@ -28,22 +36,28 @@ const Island = () => {
     };
   }
 
+  const onStartOrbit = () => {
+    if(!movingOrbits && click) setMovingOrbits(true)
+  }
 
-
+  const onEndOrbit = () => {
+    setMovingOrbits(false)
+  }
+ 
   return <group onPointerDown={(e)=> onVoidClick(e)}>
-    <OrbitControls target0={[0,0,0]} target={[0,0,0]} 
+    <OrbitControls 
+    target0={[0,0,0]} target={[0,0,0]} 
     enableRotate={!isGlobalDragging} enablePan={false}   
     maxDistance={50} minDistance={20}
-    minPolarAngle={0} maxPolarAngle={Math.PI / 2.2} />
+    minPolarAngle={0} maxPolarAngle={Math.PI / 2.2} 
+    onChange={()=> onStartOrbit()}
+    onEnd={()=> onEndOrbit()}
+    />
     <ambientLight intensity={0.5} />
     <Environment preset="sunset" />
     <Stage center={{disable:true}} adjustCamera={false} name={"stage"} >
 
-      <mesh position={[0,0,0]} > 
-        <boxGeometry />
-        <meshStandardMaterial />
-      </mesh>
-
+      <EnvControls/>
 
       <EnvIsland />
       <MusicBlocks />

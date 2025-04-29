@@ -7,9 +7,13 @@ const instr3D_A:IInstr3D = {
   instrumentType:'bells',
   modelType:"house",
 }
+const instr3D_B:IInstr3D = {
+  instrumentType:'synth',
+  modelType:"tree",
+}
 
 const grabItem_A:IGrabItem =  {
-    instr3D:instr3D_A,
+    instr3D:instr3D_B,
     initX:20,
     initZ:20
 }

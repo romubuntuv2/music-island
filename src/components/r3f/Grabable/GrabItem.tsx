@@ -8,6 +8,9 @@ import { useMusicStore } from "../../../stores/MusicStore";
 import { Instrument, Song, StepNoteType, Track } from "reactronica";
 import { IInstr3D } from "../../../interfaces/Interfaces";
 import House from "../../../models/House";
+import { useSFXStore } from "../../../stores/SFXStore";
+import { useGammeStore } from "../../../stores/GammeStore";
+import Tree from "../../../models/Tree";
 
 
 
@@ -34,7 +37,7 @@ const GrabItem = (
     const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
     const [isNote, setIsNote] = useState(false)
     const currentNote = () => {
-        return {name:gamme[currentNoteIndex], duration:1.5} as StepNoteType
+        return {name:getBells()[currentNoteIndex], duration:1.5} as StepNoteType
     }
     const colorNote = () => {
         return colors[currentNoteIndex]
@@ -42,8 +45,10 @@ const GrabItem = (
  
     const [dynamicNotes, setDynamicNotes] = useState<StepNoteType[]>([])
 
+    const {getBells} = useGammeStore();
     const {setStepsByType, setNullStepsByType} = useMusicStore();
-    const {setIsGlobalDragging, isGlobalDragging, passGrabNewPos} = useControlsStore();
+    const {setIsGlobalDragging, isGlobalDragging, passGrabNewPos, toogleHoveringGrabItems} = useControlsStore();
+    const {play} = useSFXStore();
     const {motionPointerPos} = useMouseIntersect();
     
 
@@ -88,16 +93,19 @@ const GrabItem = (
     }
 
     const onEnter= ()=> {
+        toogleHoveringGrabItems();
         scale.set(.9)
         yScale.set(.1)
     }
 
     const onLeave = ()=> {
+        toogleHoveringGrabItems();
         scale.set(.85)
         yScale.set(0)
     }
 
     const handleDragStart = () => {
+        play('swipe')
         if(isNote) {
             setNullStepsByType(savedPosX.get()+8, inst3D.instrumentType);
         }
@@ -110,6 +118,7 @@ const GrabItem = (
     }
 
     const handleDragEnd = () => {
+        play('swipe')
         if(passGrabNewPos.x == 200 && passGrabNewPos.z == 200 && passGrabNewPos.ref == null) {
             savedPosY.set(0);
             savedPosX.set(springX.get())
@@ -168,6 +177,8 @@ const GrabItem = (
         switch (inst3D.modelType) {
             case 'house':
                 return <House color={colorNote()} placedStep={placedStep} />
+            case 'tree':
+                return <Tree colorIndex={currentNoteIndex} placedStep={placedStep} />
             default:
                 return <></>
         }
