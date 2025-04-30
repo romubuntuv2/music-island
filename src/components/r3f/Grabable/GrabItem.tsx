@@ -3,28 +3,22 @@ import { useEffect, useRef, useState } from "react";
 import { Group} from "three";
 import useMouseIntersect from "../../../hooks/MouseIntersect";
 import { useControlsStore } from "../../../stores/ControlsStore";
-import { useMotionValue, useSpring, useTransform } from "motion/react";
+import { useMotionValue, useSpring, useTime, useTransform } from "motion/react";
 import { useMusicStore } from "../../../stores/MusicStore";
 import { Instrument, Song, StepNoteType, Track } from "reactronica";
 import House from "../../../models/House";
 import { useSFXStore } from "../../../stores/SFXStore";
-import { useGammeStore } from "../../../stores/GammeStore";
+
 import Tree from "../../../models/Tree";
-import { IInstr3D } from "./GenGrabItems";
+import { IGrabItem } from "./GenGrabItems";
 
 
 
-const gamme = [
-    "C3", "D3","E3","G3","A3"
-]
 
-const colors = [
-    'red','green','blue','purple', 'black'
-]
 
 
 const GrabItem = (
-    {inst3D, initX, initZ}:{inst3D:IInstr3D, initX:number, initZ:number}
+    {grabItem}:{grabItem:IGrabItem}
 ) => {
 
 
@@ -33,34 +27,41 @@ const GrabItem = (
 
 
     const [isDragging, setIsDragging] = useState(false);
+    const [hasPlayedPop, setHasPlayedPop] = useState(false);
     const [placedStep, setPlacedStep] = useState<number|null>(null);
-    const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
-    const [isNote, setIsNote] = useState(false)
-    const currentNote = () => {
-        return {name:getBells()[currentNoteIndex], duration:1.5} as StepNoteType
-    }
-    const colorNote = () => {
-        return colors[currentNoteIndex]
-    }
+    const [isNote, setIsNote]= useState(false)
+
+    const [currentNoteIndex, setCurrentNoteIndex] = useState(grabItem.initNoteIndex);
+
+
+    // const currentNote = () => {
+    //     return {name:getBells()[currentNoteIndex], duration:1.5} as StepNoteType
+    // }
+    // const colorNote = () => {
+    //     return colors[currentNoteIndex]
+    // }
  
     const [dynamicNotes, setDynamicNotes] = useState<StepNoteType[]>([])
 
-    const {getBells} = useGammeStore();
-    const {setStepsByType, setNullStepsByType} = useMusicStore();
-    const {setIsGlobalDragging, isGlobalDragging, passGrabNewPos, toogleHoveringGrabItems} = useControlsStore();
-    const {play} = useSFXStore();
+    const {setStepsByType, currentGamme, getDynamicNotes, changeNote} = useMusicStore();
+    const {setIsGlobalDragging, isGlobalDragging, passGrabNewPos, setCursorType} = useControlsStore();
+    const {play, stop} = useSFXStore();
     const {motionPointerPos} = useMouseIntersect();
     
 
     //#region MOTION VALUE
+    const time = useTime();
+    const timeToScale = useTransform(time,[0,300],[0,1])
+    const timeSpringScale = useSpring(timeToScale);
+
     const yScale = useMotionValue(0);
     const springYScale = useMotionValue(0);
     const scale = useMotionValue(0.9);
     const springScale = useSpring(scale);
 
-    const savedPosX = useMotionValue(initX);
-    const savedPosY = useMotionValue(-3);
-    const savedPosZ = useMotionValue(initZ);
+    const savedPosX = useMotionValue(grabItem.initX);
+    const savedPosY = useMotionValue(-2.3);
+    const savedPosZ = useMotionValue(grabItem.initZ);
     const posX = useTransform(()=> {
         if(isDragging) {
             return motionPointerPos.get().x
@@ -93,24 +94,23 @@ const GrabItem = (
     }
 
     const onEnter= ()=> {
-        toogleHoveringGrabItems();
+        setCursorType('grab')
         scale.set(.9)
         yScale.set(.1)
     }
 
     const onLeave = ()=> {
-        toogleHoveringGrabItems();
+        setCursorType('none')
         scale.set(.85)
         yScale.set(0)
     }
 
     const handleDragStart = () => {
         play('swipe')
-        if(isNote) {
-            setNullStepsByType(savedPosX.get()+8, inst3D.instrumentType);
-        }
         setDynamicNotes([])
-        setIsNote(false);
+
+        if(isNote) setStepsByType({note:-1, z:savedPosZ.get()},savedPosX.get()+8, grabItem.instr3D.instrumentType)
+        setIsNote(false)
         setIsDragging(true);
         setPlacedStep(null);
         setIsGlobalDragging(true);
@@ -120,7 +120,7 @@ const GrabItem = (
     const handleDragEnd = () => {
         play('swipe')
         if(passGrabNewPos.x == 200 && passGrabNewPos.z == 200 && passGrabNewPos.ref == null) {
-            savedPosY.set(-3);
+            savedPosY.set(-2.3);
             savedPosX.set(springX.get())
             savedPosZ.set(springZ.get())
             parentRef.current = null;
@@ -131,21 +131,21 @@ const GrabItem = (
             savedPosY.set(0);
             savedPosZ.set(passGrabNewPos.z);
             parentRef.current = passGrabNewPos.ref;
-            setDynamicNotes([currentNote()])
-            setStepsByType(currentNote(),passGrabNewPos.x+8, inst3D.instrumentType)
+            setDynamicNotes([getDynamicNotes(currentNoteIndex, grabItem.instr3D.instrumentType)])
+            setIsNote(true);
+            setStepsByType({note:currentNoteIndex, z:savedPosZ.get()},passGrabNewPos.x+8, grabItem.instr3D.instrumentType)
             setPlacedStep(passGrabNewPos.x+8);
             setIsDragging(false);
-            setIsNote(true);
         }
     }
 
     const handleChangeNote = () => {
         let newNoteIndex = currentNoteIndex;
         while(newNoteIndex=== currentNoteIndex) {
-            newNoteIndex = Math.floor(Math.random()*(gamme.length-1));
+            newNoteIndex = Math.floor(Math.random()*(currentGamme().bells.length-1));
         }
         setCurrentNoteIndex(newNoteIndex)
-        setStepsByType(currentNote(),savedPosX.get()+8, inst3D.instrumentType)
+        changeNote({note:newNoteIndex, z:savedPosZ.get()},savedPosX.get()+8, grabItem.instr3D.instrumentType)
     }
     //#endregion
 
@@ -162,6 +162,16 @@ const GrabItem = (
         ref.current.position.y = springY.get() + springYScale.get();
         ref.current.position.z = springZ.get();
 
+        ref.current.scale.x = timeSpringScale.get()
+        ref.current.scale.y = timeSpringScale.get()
+        ref.current.scale.z = timeSpringScale.get()
+
+        if(ref.current.scale.x > 0.5 && !hasPlayedPop) {
+            setHasPlayedPop(true);
+            stop('pop');
+            play('pop');
+        }
+
         if(parentRef.current !== null) {
             if(parentRef.current.parent === null) return;
             ref.current.position.y = springY.get() + parentRef.current.position.y + springYScale.get();;
@@ -169,14 +179,15 @@ const GrabItem = (
             ref.current.scale.y = springScale.get();
             ref.current.scale.z = springScale.get();
 
+
         }
     })
 
 
     const getModel = () => {
-        switch (inst3D.modelType) {
+        switch (grabItem.instr3D.modelType) {
             case 'house':
-                return <House color={colorNote()} placedStep={placedStep} />
+                return <House colorIndex={currentNoteIndex} placedStep={placedStep} />
             case 'tree':
                 return <Tree colorIndex={currentNoteIndex} placedStep={placedStep} />
             default:
@@ -190,9 +201,14 @@ const GrabItem = (
         {getModel()}
     </group>
     <Song>
+        <Track >
+        <Instrument type='synth'
+        notes={grabItem.instr3D.instrumentType==="synth"?dynamicNotes:[]} />  
+        </Track>
+
         <Track>
         <Instrument type='sampler' polyphony={7}
-        notes={inst3D.instrumentType==="bells"?dynamicNotes:[]}
+        notes={grabItem.instr3D.instrumentType==="bells"?dynamicNotes:[]}
         samples={{
         C3: '/sounds/bells/bell-C.wav',
         D3: '/sounds/bells/bell-D.wav',

@@ -1,24 +1,35 @@
 
 import { Instrument, Song, Track } from 'reactronica'
 import { useMusicStore } from '../../stores/MusicStore'
-
+import {  useMemo } from 'react'
 const SongIsland = () => {
 
-  const {isPlaying, tempo, setCurrentStep, steps} = useMusicStore()
+  const {isPlaying, tempo,currentStep, setCurrentStep, getStepsByType} = useMusicStore()
 
-  
+  const synthSteps = useMemo(()=> {
+    return getStepsByType('synth');
+  },[currentStep])
+
+  const bellsSteps = useMemo(()=> {
+    return getStepsByType('bells');
+  },[currentStep])
+
+
+
+
   return <Song isPlaying={isPlaying} bpm={tempo} >
     <Track //SYNTH TRACK  
-      steps={steps.synth}
-      onStepPlay={(_, index) => {
-        setCurrentStep(index)
-      }}>
+      steps={synthSteps}
+      >
     <Instrument type='synth' />  
     </Track>
 
 
     <Track //BELLS TRACK TRACK  
-      steps={steps.bells}
+      steps={bellsSteps}
+      onStepPlay={(_, index) => {
+        setCurrentStep(index)
+      }}
     >
     <Instrument type='sampler' polyphony={7}
     samples={{

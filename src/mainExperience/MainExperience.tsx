@@ -37,7 +37,7 @@ const MainContainer = styled.div<{color:string}>`
     height: 100%;
     width: 100%;
     background-color: ${props=>props.color};
-    overflow: hidden;
+    /* overflow: hidden; */
 `
 
 

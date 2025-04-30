@@ -26,7 +26,7 @@ const Island = () => {
 
 
 
-  const {isGlobalDragging, setIsGlobalDragging,setPassGrabNewPos, movingOrbits, setMovingOrbits, click} = useControlsStore();
+  const {isGlobalDragging, setIsGlobalDragging,setPassGrabNewPos, cursorType,setCursorType, click} = useControlsStore();
 
   const onVoidClick = (e:ThreeEvent<MouseEvent>)=> {
     e.stopPropagation();
@@ -37,11 +37,11 @@ const Island = () => {
   }
 
   const onStartOrbit = () => {
-    if(!movingOrbits && click) setMovingOrbits(true)
+    if(!(cursorType=='move') && click) setCursorType('move')
   }
 
   const onEndOrbit = () => {
-    setMovingOrbits(false)
+    setCursorType('none')
   }
  
   return <group onPointerDown={(e)=> onVoidClick(e)}>

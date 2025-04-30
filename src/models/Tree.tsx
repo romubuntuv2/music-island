@@ -9,8 +9,8 @@ import { useMotionValue, useSpring, useTransform } from 'motion/react'
 const treeColor = [
     '#06b400',
     '#0e732b',
-    '#b1ac50',
-    '#4ce235',
+    '#6ee63b',
+    '#19a104',
 ]
 
 const Tree = (
@@ -28,11 +28,19 @@ const Tree = (
     const {currentStep, isPlaying} = useMusicStore();
 
     const savedRotation = useMotionValue(0)
-
+    const alreadyPlaced = useMotionValue(false);
 
     const rotation = useTransform(()=> {
-        if(placedStep == null) return 0;
-        if(isPlaying && (currentStep == placedStep)) {
+        if(placedStep == null) {
+            alreadyPlaced.set(false)
+            return savedRotation.get()
+        } else if(placedStep !=null && !alreadyPlaced.get()) {
+            const oldRot = savedRotation.get();
+            const newRot = oldRot+0.07
+            savedRotation.set(newRot)
+            alreadyPlaced.set(true)
+            return newRot
+        } else if(isPlaying && (currentStep == placedStep)) {
             const oldRot = savedRotation.get();
             const newRot = oldRot+0.07
             savedRotation.set(newRot)

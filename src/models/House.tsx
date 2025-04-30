@@ -2,8 +2,17 @@ import { Clone, useGLTF } from '@react-three/drei'
 import { useMusicStore } from '../stores/MusicStore'
 import { useTransform } from 'motion/react'
 
+const colors = [
+  'red',
+  'green',
+  'blue',
+  'pink',
+  'purple'
+]
+
+
 const House = (
-  {color, placedStep}:{color:string, placedStep:number|null}
+  {colorIndex, placedStep}:{colorIndex:number, placedStep:number|null}
 ) => {
 
   const {nodes} = useGLTF('/models/house.glb')
@@ -19,7 +28,7 @@ const House = (
 
 
   return <Clone position={[0,-.5,0]} object={[nodes.House, nodes.Toiture, nodes.Windows]}  
-    inject={(object) => object.name == "House" ? <meshStandardMaterial color={color} /> :
+    inject={(object) => object.name == "House" ? <meshStandardMaterial color={colors[colorIndex]} /> :
     object.name == "Windows" ? <meshStandardMaterial color={windowColor.get()} /> : <></>} 
     />
 }

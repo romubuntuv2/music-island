@@ -1,70 +1,47 @@
-import { useState } from 'react'
 import GrabItem from './GrabItem';
-import { ThreeEvent } from '@react-three/fiber';
+import { useEnvStore } from '../../../stores/EnvStore';
 
 
 export interface IInstr3D {
-  instrumentType:string,
-  modelType:string
+  instrumentType:'bells'|'synth',
+  modelType:string,
+  numberNotes:number,
 }
 
 export interface IGrabItem {
   id:number,
   instr3D:IInstr3D,
   initX:number,
-  initZ:number
+  initZ:number,
+  initNoteIndex:number,
 }
 
 
-const instr3D_A:IInstr3D = {
-  instrumentType:'bells',
-  modelType:"house",
-}
-const instr3D_B:IInstr3D = {
-  instrumentType:'synth',
-  modelType:"tree",
-}
+// const instr3D_B:IInstr3D = {
+//   instrumentType:'synth',
+//   modelType:"tree",
+//   numberNotes:8,
+// }
 
-const grabItem_A:IGrabItem =  {
-    id:0,
-    instr3D:instr3D_B,
-    initX:20,
-    initZ:20
-}
+// const grabItem_A:IGrabItem =  {
+//     id:0,
+//     instr3D:instr3D_B,
+//     initX:20,
+//     initZ:20,
+//     initNoteIndex:2,
+// }
 
 
 
 
 const GenGrabItems = () => {
 
-    const [grabItemsList, setGrabItemsList] = useState<IGrabItem[]>([grabItem_A])
-
-
-
-    const onGenerateItems = (e:ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-        const x = 16+(Math.random()*10);
-        const z = 16+(Math.random()*10);
-        const newGrabItem:IGrabItem = {
-            id:1, /// GENERATE NEW IDS
-            initX:x, initZ:z,
-            instr3D:instr3D_A
-        }
-        setGrabItemsList([...grabItemsList, newGrabItem])
-    }
-
+  const {grabItemsList} = useEnvStore();
 
   return <>
-      <mesh position={[15,0,15]}  onPointerDown={onGenerateItems} >
-        <boxGeometry/>
-        <meshStandardMaterial color={'green'} />
-      </mesh>
-
-      {grabItemsList.map((grabItem, index) => {
-        return <GrabItem  inst3D={grabItem.instr3D} initX={grabItem.initX} initZ={grabItem.initZ} key={index} />
-      })}
-
-
+    {grabItemsList.map((grabItem, index) => {
+      return <GrabItem  grabItem={grabItem} key={index} />
+    })}
   </>
 }
 

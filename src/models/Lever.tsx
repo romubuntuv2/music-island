@@ -6,6 +6,7 @@ import { ThreeEvent, useFrame } from '@react-three/fiber'
 import { MotionValue, useSpring, useTime, useTransform } from 'motion/react'
 import { useRef } from 'react'
 import { useSFXStore } from '../stores/SFXStore'
+import { useControlsStore } from '../stores/ControlsStore'
 
 const Lever = () => {
 
@@ -14,7 +15,8 @@ const Lever = () => {
   const groupRef = useRef<Group>(null);
   const leverRef = useRef<Group>(null);
 
-  const {toogleIsPlayer, isPlaying} = useMusicStore()
+  const {toogleIsPlayer, isPlaying, } = useMusicStore()
+  const {setCursorType} = useControlsStore();
   const {play,stop} = useSFXStore();
 
 
@@ -38,6 +40,15 @@ const Lever = () => {
     toogleIsPlayer()
   }
 
+  const onEnter = (e:ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+    setCursorType(isPlaying?'pause':'play')
+  }
+  const onLeave = (e:ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+    setCursorType('none')
+  }
+
   useFrame(()=> {
     if(!(leverRef ==null || leverRef.current == null)) {
       leverRef.current.rotation.x = springRotation.get();
@@ -58,7 +69,9 @@ const Lever = () => {
   return (
     <group ref={groupRef}
     onPointerDown={handleClick}
-    position={[0,-3,12]} dispose={null}>
+    onPointerEnter={onEnter}
+    onPointerLeave={onLeave}
+    position={[-10,-3,12]} dispose={null}>
       <mesh
         castShadow
         receiveShadow

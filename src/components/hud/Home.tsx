@@ -54,6 +54,13 @@ const Home = (
         transition={{delay:1}}
         >Grab some items and decorate your island... <br/> and make music with it !
         </Text>
+        <Text fontSize='18px'
+        initial={{scale:0,marginTop:'3%'}}
+        animate={{scale:1,marginTop:'3%'}}
+        transition={{delay:1}}
+        >Left Click on items to move them <br/> Right Click to change their note
+        </Text>
+        
         <Text fontSize='12px'
         
         initial={{scale:0,marginTop:'10%'}}

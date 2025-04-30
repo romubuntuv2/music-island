@@ -6,29 +6,28 @@ export interface IControlsStore  {
     setIsGlobalDragging:(isDragging:boolean) => void,
     passGrabNewPos:{x:number, z:number, ref:null|Group},
     setPassGrabNewPos:(x:number, z:number, ref:Group|null) => void,
-    hoveringGrabItems:boolean;
-    toogleHoveringGrabItems:()=>void;
-    movingOrbits:boolean,
-    setMovingOrbits:(value:boolean)=>void;
+
+    cursorType:string,
+    setCursorType:(type:string)=>void,
+
+
     click:boolean,
     setClick:(value:boolean)=>void;
 }
 
 
-export const useControlsStore = create<IControlsStore>()((set,get) => ({
+export const useControlsStore = create<IControlsStore>()((set) => ({
     isGlobalDragging:false,
     setIsGlobalDragging:(isDragging:boolean) => {set({ isGlobalDragging:isDragging })},
     passGrabNewPos:{x:0, z:0, ref:null,},
     setPassGrabNewPos:(x:number, z:number, ref:Group|null) => {set({ passGrabNewPos:{x:x, z:z, ref:ref} })},
-    hoveringGrabItems:false,
-    toogleHoveringGrabItems:()=> {
-        const {hoveringGrabItems} = get();
-        set({hoveringGrabItems:!hoveringGrabItems})
+
+
+    cursorType:'none',
+    setCursorType:(type:string) => {
+        set({cursorType:type})
     },
-    movingOrbits:false,
-    setMovingOrbits:(value:boolean)=> {
-        set({movingOrbits:value})
-    },
+
     click:false,
     setClick:(value:boolean) => {
         set({click:value})

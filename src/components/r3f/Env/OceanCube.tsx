@@ -20,7 +20,7 @@ const OceanCube = (
   const timeMod = useTransform(()=> (time.get()+ offset.get())%3000)
   const timeTransform = useTransform(timeMod, [0,3000], [-2*Math.PI, 0])  
 
-  const scaleFromTime = useTransform(time, [dist*100, dist*200], [0,1]);
+  const scaleFromTime = useTransform(time, [dist*100+100, dist*200+100], [0,1]);
   const springScale = useSpring(scaleFromTime);
   
 

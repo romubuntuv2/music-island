@@ -4,6 +4,7 @@ import MainExperience from "./mainExperience/MainExperience"
 import { useState } from "react"
 import Home from "./components/hud/Home";
 import Cursor from "./components/hud/Cursor";
+import { Analytics } from "@vercel/analytics/react";
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
 
   return (
     <Container>
+      <Analytics/>
       {start?
       <Home setIsStart={setIsStart} />:
       <MainExperience/>
@@ -29,6 +31,6 @@ const Container = styled.div`
   margin: 0;
   height: 100vh;
   width: 100vw;
-
+  overflow:none;
   cursor: none;
 `

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { IGrabItem, IInstr3D } from "../components/r3f/Grabable/GenGrabItems";
 
 export interface IMusicBoxEl {
     x:number,
@@ -13,14 +14,35 @@ export interface IOceanEl {
 }
 
 
+const instr3D_A:IInstr3D = {
+  instrumentType:'bells',
+  modelType:"house",
+  numberNotes:5,
+}
+const instr3D_B:IInstr3D = {
+  instrumentType:'synth',
+  modelType:"tree",
+  numberNotes:7,
+}
+
+const allInstr = [
+    instr3D_A,
+    instr3D_B
+]
+
+
 export interface IEnvStore {
     musicbox:IMusicBoxEl[],
     ocean:IOceanEl[],
-    initEnv:()=> void
+    initEnv:()=> void,
+
+    grabItemsList:IGrabItem[],
+    addGrabItems:()=>void,
     
+    rebootEnv:()=>void,
 }
 
-export const useEnvStore = create<IEnvStore>((set)=> ({
+export const useEnvStore = create<IEnvStore>((set, get)=> ({
     musicbox:[],
     ocean:[],
     initEnv:()=> {
@@ -67,5 +89,41 @@ export const useEnvStore = create<IEnvStore>((set)=> ({
            }
         }
         set({musicbox:musicBoxList, ocean:oceanList})     
+    },
+    grabItemsList:[],
+    addGrabItems:()=> {
+        const {grabItemsList} = get()
+        const newList = [...grabItemsList]
+        const instrIndex = Math.round(Math.random()*(allInstr.length-1))
+        const instr = allInstr[instrIndex]
+
+        let x = (Math.random()*40)-20;
+        let z = ((Math.random()*30)-15)-5;
+        while(x<= 11 && x>=-11 && z >= -11) {
+            x = (Math.random()*40)-20;
+            z = ((Math.random()*30)-15)-5;
+        }
+
+        const noteIndex= Math.round(Math.random()*(instr.numberNotes-1));
+        const newGrabItem:IGrabItem = {
+            id:1, /// GENERATE NEW IDS
+            initX:x, initZ:z,
+            instr3D:instr,
+            initNoteIndex:noteIndex,
+        }
+        newList.push(newGrabItem);
+        set({grabItemsList:newList})
+    },
+
+    rebootEnv:()=> {
+        const {initEnv}=get()
+
+        set({grabItemsList:[], ocean:[], musicbox:[]})
+        setTimeout(()=> {
+            initEnv();
+        },20)
+
+
+
     }
 }))

@@ -39,7 +39,7 @@ const {currentStep, isPlaying} = useMusicStore();
 const {isGlobalDragging, setIsGlobalDragging, setPassGrabNewPos} = useControlsStore();
 
 const time = useTime();
-const scaleFromTime = useTransform(time, [dist*100, dist*200], [0,1]);
+const scaleFromTime = useTransform(time, [dist*100+100, dist*200+100], [0,1]);
 const springScale = useSpring(scaleFromTime);
 
 const onClickMesh = (e:ThreeEvent<MouseEvent>) => {

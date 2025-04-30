@@ -5,7 +5,7 @@ import { useControlsStore } from '../../stores/ControlsStore'
 
 const Cursor = () => {
 
-    const {isGlobalDragging, hoveringGrabItems, movingOrbits, setClick} = useControlsStore();
+    const {isGlobalDragging, cursorType, setClick} = useControlsStore();
     
 
     const motionClick = useMotionValue(false)
@@ -17,10 +17,32 @@ const Cursor = () => {
     const cursorY = useMotionValue(0);
     const y = useTransform(()=> cursorY.get()-5)
 
-    const img = useTransform(()=> {
-        if(isGlobalDragging) return '/cursor/grabbing.png'
-        else if(hoveringGrabItems) return '/cursor/grab.png'
-        else if(movingOrbits) return '/cursor/move.png'
+    const img = useTransform(()=> {  
+        if(cursorType!=='none') {
+            switch (cursorType) {
+                case 'left':
+                    return '/cursor/left.png'
+                case 'right':
+                    return '/cursor/right.png'
+                case 'spawn':
+                    return '/cursor/plus.png'
+                case 'grab':
+                    return '/cursor/grab.png'
+                case 'move':
+                    return '/cursor/move.png'
+                case 'custom':
+                    return '/cursor/brush.png'
+                case 'reboot':
+                    return '/cursor/reboot.png'
+                case 'play':
+                    return '/cursor/play.png'
+                case 'pause':
+                    return '/cursor/pause.png'
+                default:
+                    return '/cursor/grab.png'
+            }
+        }
+        else if(isGlobalDragging) return '/cursor/grabbing.png'
         else return '/cursor/point.png'
     })
 
