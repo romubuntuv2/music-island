@@ -18,7 +18,7 @@ const GammeButton= (
 
     const { nodes, materials } = useGLTF('/models/gammeButton.glb')
 
-    const {toggleGamme, rebootSong} = useMusicStore();
+    const {toggleGamme, isPlaying, toogleIsPlayer, rebootSong} = useMusicStore();
     const {addGrabItems, grabItemsList, rebootEnv} = useEnvStore();
     const {setCursorType} = useControlsStore();
     const {play, stop} = useSFXStore();
@@ -80,6 +80,7 @@ const GammeButton= (
             case 'spawn':
                 if(grabItemsList.length < 35) {
                     addGrabItems();
+                    if(isPlaying) toogleIsPlayer()             
                 }
                 break;
             case 'reboot':

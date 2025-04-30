@@ -60,13 +60,13 @@ const Home = (
         transition={{delay:1}}
         >Left Click on items to move them <br/> Right Click to change their note
         </Text>
-        
+
         <Text fontSize='12px'
         
-        initial={{scale:0,marginTop:'10%'}}
-        animate={{scale:1, marginTop:'10%'}}
+        initial={{scale:0,marginTop:'5%'}}
+        animate={{scale:1, marginTop:'5%'}}
         transition={{delay:2}}
-        >Freely inspired by Odadda created by Sven Ahlgrimm
+        >3D Models by romubuntu <br/> Cursor Icons by Kenney <br/> Freely inspired by Odadda created by Sven Ahlgrimm
         </Text>
 
         </TextContainer>
