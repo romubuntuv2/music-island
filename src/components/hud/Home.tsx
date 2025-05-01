@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { useEnvStore } from "../../stores/EnvStore";
 import { useEffect } from "react";
 import { useSFXStore } from "../../stores/SFXStore";
+import { useDeviceStore } from "../../stores/DeviceStore";
 
 
 const Home = (
@@ -11,6 +12,7 @@ const Home = (
 
   const {initEnv} = useEnvStore();
   const {initSounds, play} = useSFXStore();
+  const {isMobile} = useDeviceStore();
   useEffect(()=> {
     initEnv();
     initSounds();
@@ -44,6 +46,7 @@ const Home = (
         initial={{scale:0}}
         animate={{scale:1}}
         whileHover={{scale:1.2}}
+        style={{height: isMobile?"15%":"10%",width:isMobile?"45%":"20%",}}
         >
             Start
         </StartButton>
@@ -84,8 +87,7 @@ const StartButton = styled(motion.div)`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 10%;
-    width: 15%;
+
 
     font-size: 48px;
 

@@ -1,15 +1,22 @@
 import styled from "styled-components"
 
 import MainExperience from "./mainExperience/MainExperience"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Home from "./components/hud/Home";
 import Cursor from "./components/hud/Cursor";
 import { Analytics } from "@vercel/analytics/react";
+import { useDeviceStore } from "./stores/DeviceStore";
 
 
 function App() {
 
   const [start, setIsStart] = useState(true);
+
+  const {setIsMobile, isMobile} = useDeviceStore();
+  useEffect(()=> {
+    setIsMobile(window.innerWidth <= 1024);
+  },[])
+
 
   return (
     <Container>
@@ -18,7 +25,7 @@ function App() {
       <Home setIsStart={setIsStart} />:
       <MainExperience/>
       }
-      <Cursor/>
+      {isMobile && <Cursor/>}
     </Container>
   )
 }
