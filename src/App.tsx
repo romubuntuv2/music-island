@@ -25,7 +25,7 @@ function App() {
       <Home setIsStart={setIsStart} />:
       <MainExperience/>
       }
-      {isMobile && <Cursor/>}
+      {!isMobile && <Cursor/>}
     </Container>
   )
 }
