@@ -87,6 +87,7 @@ const GammeButton= (
                 play('trash')
                 rebootEnv();
                 rebootSong();
+                if(isPlaying) toogleIsPlayer() 
                 setTimeout(()=> {
                     play('intro')
                 },20)

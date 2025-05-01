@@ -14,20 +14,32 @@ export interface IOceanEl {
 }
 
 
-const instr3D_A:IInstr3D = {
+const instr3D_bells:IInstr3D = {
   instrumentType:'bells',
+  modelType:"tree",
+  numberNotes:3,
+}
+const instr3D_synth:IInstr3D = {
+  instrumentType:'synth',
+  modelType:"mill",
+  numberNotes:5,
+}
+const instr3D_bass:IInstr3D = {
+  instrumentType:'bass',
+  modelType:"rock",
+  numberNotes:4,
+}
+const instr3D_vox:IInstr3D = {
+  instrumentType:'vox',
   modelType:"house",
   numberNotes:5,
 }
-const instr3D_B:IInstr3D = {
-  instrumentType:'synth',
-  modelType:"tree",
-  numberNotes:7,
-}
 
 const allInstr = [
-    instr3D_A,
-    instr3D_B
+    instr3D_bells,
+    instr3D_synth,
+    instr3D_bass,
+    instr3D_vox,
 ]
 
 

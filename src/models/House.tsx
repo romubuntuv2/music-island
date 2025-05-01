@@ -3,11 +3,13 @@ import { useMusicStore } from '../stores/MusicStore'
 import { useTransform } from 'motion/react'
 
 const colors = [
-  'red',
-  'green',
-  'blue',
-  'pink',
-  'purple'
+  '#c64f4f',
+  '#c64f71',
+  '#4fc6c0',
+  '#4fc64f',
+  '#b4c64f',
+  '#ba4fc6',
+  '#4f5fc6',
 ]
 
 

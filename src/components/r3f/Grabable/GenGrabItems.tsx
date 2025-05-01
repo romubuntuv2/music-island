@@ -3,7 +3,7 @@ import { useEnvStore } from '../../../stores/EnvStore';
 
 
 export interface IInstr3D {
-  instrumentType:'bells'|'synth',
+  instrumentType:'bells'|'synth'|'vox'|'bass',
   modelType:string,
   numberNotes:number,
 }

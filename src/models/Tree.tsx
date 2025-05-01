@@ -7,10 +7,9 @@ import { useFrame } from '@react-three/fiber'
 import { useMotionValue, useSpring, useTransform } from 'motion/react'
 
 const treeColor = [
-    '#06b400',
+    '#3e663a',
     '#0e732b',
-    '#6ee63b',
-    '#19a104',
+    '#238345',
 ]
 
 const Tree = (

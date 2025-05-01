@@ -11,6 +11,8 @@ import { useSFXStore } from "../../../stores/SFXStore";
 
 import Tree from "../../../models/Tree";
 import { IGrabItem } from "./GenGrabItems";
+import Mill from "../../../models/Mill";
+import Rock from "../../../models/Rock";
 
 
 
@@ -86,6 +88,7 @@ const GrabItem = (
     //#region HANDLE FUNCTIONS
     const onClick = (e:ThreeEvent<MouseEvent>)=> {
         e.stopPropagation()
+        if(isGlobalDragging)return;
         if(e.buttons == 1) {
             handleDragStart();
         } else if (e.buttons == 2) {
@@ -94,6 +97,7 @@ const GrabItem = (
     }
 
     const onEnter= ()=> {
+        if(isGlobalDragging) return;
         setCursorType('grab')
         scale.set(.9)
         yScale.set(.1)
@@ -142,7 +146,7 @@ const GrabItem = (
     const handleChangeNote = () => {
         let newNoteIndex = currentNoteIndex;
         while(newNoteIndex=== currentNoteIndex) {
-            newNoteIndex = Math.floor(Math.random()*(currentGamme().bells.length-1));
+            newNoteIndex = Math.floor(Math.random()*(grabItem.instr3D.numberNotes));
         }
         setCurrentNoteIndex(newNoteIndex)
         changeNote({note:newNoteIndex, z:savedPosZ.get()},savedPosX.get()+8, grabItem.instr3D.instrumentType)
@@ -190,6 +194,10 @@ const GrabItem = (
                 return <House colorIndex={currentNoteIndex} placedStep={placedStep} />
             case 'tree':
                 return <Tree colorIndex={currentNoteIndex} placedStep={placedStep} />
+            case 'mill':
+                return <Mill  colorIndex={currentNoteIndex} placedStep={placedStep}/>
+            case 'rock':
+                return <Rock colorIndex={currentNoteIndex} placedStep={placedStep} />
             default:
                 return <></>
         }
@@ -201,25 +209,91 @@ const GrabItem = (
         {getModel()}
     </group>
     <Song>
-        <Track >
-        <Instrument type='synth'
-        notes={grabItem.instr3D.instrumentType==="synth"?dynamicNotes:[]} />  
-        </Track>
-
+        
         <Track>
-        <Instrument type='sampler' polyphony={7}
-        notes={grabItem.instr3D.instrumentType==="bells"?dynamicNotes:[]}
-        samples={{
-        C3: '/sounds/bells/bell-C.wav',
-        D3: '/sounds/bells/bell-D.wav',
-        E3: '/sounds/bells/bell-E.wav',
-        G3: '/sounds/bells/bell-G.wav',
-        A3: '/sounds/bells/bell-A.wav',
-        }}
-        />
-        </Track>
-    </Song>
-    </>
+    <Instrument type='sampler' polyphony={7}
+    notes={grabItem.instr3D.instrumentType==="synth"?dynamicNotes:[]} 
+    samples={{
+      C3: '/sounds/synth/synth-C.wav',
+      'C#3':'/sounds/synth/synth-C#.wav',
+      D3: '/sounds/synth/synth-D.wav',
+      'D#3':'/sounds/synth/synth-D#.wav',
+      E3: '/sounds/synth/synth-E.wav',
+      F3:'/sounds/synth/synth-F.wav',
+      'F#3':'/sounds/synth/synth-F#.wav',
+      G3: '/sounds/synth/synth-G.wav',
+      'G#3': '/sounds/synth/synth-G#.wav',
+      A3: '/sounds/synth/synth-A.wav',
+      'A#3': '/sounds/synth/synth-A#.wav',
+      B3: '/sounds/synth/synth-B.wav',
+    }}
+    />  
+    </Track>
+
+
+    <Track>
+    <Instrument type='sampler' polyphony={7}
+    notes={grabItem.instr3D.instrumentType==="bells"?dynamicNotes:[]}
+    samples={{
+      C3: '/sounds/bells/bells-C.wav',
+      'C#3':'/sounds/bells/bells-C#.wav',
+      D3: '/sounds/bells/bells-D.wav',
+      'D#3':'/sounds/bells/bells-D#.wav',
+      E3: '/sounds/bells/bells-E.wav',
+      F3:'/sounds/bells/bells-F.wav',
+      'F#3':'/sounds/bells/bells-F#.wav',
+      G3: '/sounds/bells/bells-G.wav',
+      'G#3': '/sounds/bells/bells-G#.wav',
+      A3: '/sounds/bells/bells-A.wav',
+      'A#3': '/sounds/bells/bells-A#.wav',
+      B3: '/sounds/bells/bells-B.wav',
+    }}
+    />  
+    </Track>
+
+    <Track>
+    <Instrument type='sampler' polyphony={7}
+    notes={grabItem.instr3D.instrumentType==="bass"?dynamicNotes:[]} 
+    samples={{
+      C3: '/sounds/bass/bass-C.wav',
+      'C#3':'/sounds/bass/bass-C#.wav',
+      D3: '/sounds/bass/bass-D.wav',
+      'D#3':'/sounds/bass/bass-D#.wav',
+      E3: '/sounds/bass/bass-E.wav',
+      F3:'/sounds/bass/bass-F.wav',
+      'F#3':'/sounds/bass/bass-F#.wav',
+      G3: '/sounds/bass/bass-G.wav',
+      'G#3': '/sounds/bass/bass-G#.wav',
+      A3: '/sounds/bass/bass-A.wav',
+      'A#3': '/sounds/bass/bass-A#.wav',
+      B3: '/sounds/bass/bass-B.wav',
+    }}
+    />  
+    </Track>
+
+
+    <Track >
+    <Instrument type='sampler' polyphony={7}
+    notes={grabItem.instr3D.instrumentType==="vox"?dynamicNotes:[]}
+    samples={{
+      C3: '/sounds/vox/vox-C.wav',
+      'C#3':'/sounds/vox/vox-C#.wav',
+      D3: '/sounds/vox/vox-D.wav',
+      'D#3':'/sounds/vox/vox-D#.wav',
+      E3: '/sounds/vox/vox-E.wav',
+      F3:'/sounds/vox/vox-F.wav',
+      'F#3':'/sounds/vox/vox-F#.wav',
+      G3: '/sounds/vox/vox-G.wav',
+      'G#3': '/sounds/vox/vox-G#.wav',
+      A3: '/sounds/vox/vox-A.wav',
+      'A#3': '/sounds/vox/vox-A#.wav',
+      B3: '/sounds/vox/vox-B.wav',
+    }}
+    />  
+    </Track>
+
+  </Song>
+</>
 
 
 
