@@ -45,7 +45,7 @@ const GrabItem = (
  
     const [dynamicNotes, setDynamicNotes] = useState<StepNoteType[]>([])
 
-    const {setStepsByType, currentGamme, getDynamicNotes, changeNote} = useMusicStore();
+    const {setStepsByType, getDynamicNotes, changeNote} = useMusicStore();
     const {setIsGlobalDragging, isGlobalDragging, passGrabNewPos, setCursorType} = useControlsStore();
     const {play, stop} = useSFXStore();
     const {motionPointerPos} = useMouseIntersect();
