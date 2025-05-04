@@ -1,10 +1,12 @@
 
 import { Instrument, Song, Track } from 'reactronica'
 import { useMusicStore } from '../../stores/MusicStore'
-import {  useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { usePocketBaseStore } from '../../stores/PocketBaseStore'
 const SongIsland = () => {
 
   const {isPlaying, tempo,currentStep, setCurrentStep, getStepsByType} = useMusicStore()
+  const {sounds, synthSounds, bassSounds, bellSounds, voxSounds} = usePocketBaseStore();
 
   const synthSteps = useMemo(()=> {
     return getStepsByType('synth');
@@ -23,6 +25,9 @@ const SongIsland = () => {
   },[currentStep])
 
 
+  useEffect(()=> {
+    console.log(sounds)
+  },[currentStep])
 
 
   return <Song isPlaying={isPlaying} bpm={tempo} >
@@ -31,18 +36,18 @@ const SongIsland = () => {
       >
     <Instrument type='sampler' polyphony={7}
     samples={{
-      C3: '/sounds/synth/synth-C.wav',
-      'C#3':'/sounds/synth/synth-C#.wav',
-      D3: '/sounds/synth/synth-D.wav',
-      'D#3':'/sounds/synth/synth-D#.wav',
-      E3: '/sounds/synth/synth-E.wav',
-      F3:'/sounds/synth/synth-F.wav',
-      'F#3':'/sounds/synth/synth-F#.wav',
-      G3: '/sounds/synth/synth-G.wav',
-      'G#3': '/sounds/synth/synth-G#.wav',
-      A3: '/sounds/synth/synth-A.wav',
-      'A#3': '/sounds/synth/synth-A#.wav',
-      B3: '/sounds/synth/synth-B.wav',
+      C3: synthSounds.C,
+      'C#3':synthSounds['C#'],
+      D3: synthSounds['D'],
+      'D#3':synthSounds['D#'],
+      E3: synthSounds['E'],
+      F3:synthSounds['F'],
+      'F#3':synthSounds['F#'],
+      G3: synthSounds['G'],
+      'G#3':synthSounds['G#'],
+      A3: synthSounds['A'],
+      'A#3':synthSounds['A#'],
+      B3: synthSounds['B'],
     }}
     />  
     </Track>
@@ -56,18 +61,18 @@ const SongIsland = () => {
     >
     <Instrument type='sampler' polyphony={7}
     samples={{
-      C3: '/sounds/bells/bells-C.wav',
-      'C#3':'/sounds/bells/bells-C#.wav',
-      D3: '/sounds/bells/bells-D.wav',
-      'D#3':'/sounds/bells/bells-D#.wav',
-      E3: '/sounds/bells/bells-E.wav',
-      F3:'/sounds/bells/bells-F.wav',
-      'F#3':'/sounds/bells/bells-F#.wav',
-      G3: '/sounds/bells/bells-G.wav',
-      'G#3': '/sounds/bells/bells-G#.wav',
-      A3: '/sounds/bells/bells-A.wav',
-      'A#3': '/sounds/bells/bells-A#.wav',
-      B3: '/sounds/bells/bells-B.wav',
+      C3: bellSounds.C,
+      'C#3':bellSounds['C#'],
+      D3: bellSounds['D'],
+      'D#3':bellSounds['D#'],
+      E3: bellSounds['E'],
+      F3:bellSounds['F'],
+      'F#3':bellSounds['F#'],
+      G3: bellSounds['G'],
+      'G#3':bellSounds['G#'],
+      A3: bellSounds['A'],
+      'A#3':bellSounds['A#'],
+      B3: bellSounds['B'],
     }}
     />  
     </Track>
@@ -77,18 +82,18 @@ const SongIsland = () => {
       >
     <Instrument type='sampler' polyphony={7}
     samples={{
-      C3: '/sounds/bass/bass-C.wav',
-      'C#3':'/sounds/bass/bass-C#.wav',
-      D3: '/sounds/bass/bass-D.wav',
-      'D#3':'/sounds/bass/bass-D#.wav',
-      E3: '/sounds/bass/bass-E.wav',
-      F3:'/sounds/bass/bass-F.wav',
-      'F#3':'/sounds/bass/bass-F#.wav',
-      G3: '/sounds/bass/bass-G.wav',
-      'G#3': '/sounds/bass/bass-G#.wav',
-      A3: '/sounds/bass/bass-A.wav',
-      'A#3': '/sounds/bass/bass-A#.wav',
-      B3: '/sounds/bass/bass-B.wav',
+      C3: bassSounds.C,
+      'C#3':bassSounds['C#'],
+      D3: bassSounds['D'],
+      'D#3':bassSounds['D#'],
+      E3: bassSounds['E'],
+      F3:bassSounds['F'],
+      'F#3':bassSounds['F#'],
+      G3: bassSounds['G'],
+      'G#3':bassSounds['G#'],
+      A3: bassSounds['A'],
+      'A#3':bassSounds['A#'],
+      B3: bassSounds['B'],
     }}
     />  
     </Track>
@@ -99,18 +104,18 @@ const SongIsland = () => {
       >
     <Instrument type='sampler' polyphony={7}
     samples={{
-      C3: '/sounds/vox/vox-C.wav',
-      'C#3':'/sounds/vox/vox-C#.wav',
-      D3: '/sounds/vox/vox-D.wav',
-      'D#3':'/sounds/vox/vox-D#.wav',
-      E3: '/sounds/vox/vox-E.wav',
-      F3:'/sounds/vox/vox-F.wav',
-      'F#3':'/sounds/vox/vox-F#.wav',
-      G3: '/sounds/vox/vox-G.wav',
-      'G#3': '/sounds/vox/vox-G#.wav',
-      A3: '/sounds/vox/vox-A.wav',
-      'A#3': '/sounds/vox/vox-A#.wav',
-      B3: '/sounds/vox/vox-B.wav',
+      C3: voxSounds.C,
+      'C#3':voxSounds['C#'],
+      D3: voxSounds['D'],
+      'D#3':voxSounds['D#'],
+      E3: voxSounds['E'],
+      F3:voxSounds['F'],
+      'F#3':voxSounds['F#'],
+      G3: voxSounds['G'],
+      'G#3':voxSounds['G#'],
+      A3: voxSounds['A'],
+      'A#3':voxSounds['A#'],
+      B3: voxSounds['B'],
     }}
     />  
     </Track>

@@ -17,6 +17,7 @@
     "@types/three": "^0.175.0",
     "@vercel/analytics": "^1.5.0",
     "motion": "^12.6.3",
+    "pocketbase": "^0.26.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "reactronica": "^0.8.1-canary.0",

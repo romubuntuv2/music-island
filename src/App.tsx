@@ -6,6 +6,7 @@ import Home from "./components/hud/Home";
 import Cursor from "./components/hud/Cursor";
 import { Analytics } from "@vercel/analytics/react";
 import { useDeviceStore } from "./stores/DeviceStore";
+import { usePocketBaseStore } from "./stores/PocketBaseStore";
 
 
 function App() {
@@ -13,9 +14,16 @@ function App() {
   const [start, setIsStart] = useState(true);
 
   const {setIsMobile, isMobile} = useDeviceStore();
+  const {fetchSounds, isLoaded} = usePocketBaseStore();
   useEffect(()=> {
     setIsMobile(window.innerWidth <= 1024);
   },[])
+
+  useEffect(()=> {
+    if(!isLoaded) {
+      fetchSounds();
+    }
+  }, [isLoaded])
 
 
   return (
