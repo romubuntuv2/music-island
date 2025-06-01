@@ -1,54 +1,13 @@
-# React + TypeScript + Vite
+# 🎶 Music Island 🏝️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<code><img height="20" alt="typescript" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/typescript/typescript.png"></code>
+<code><img height="20" alt="react" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/react/react.png"></code>
+<code><img height="20" alt="reactronica" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAUVBMVEVHcExASdI+TdE4WNErcNEeidEQpNEQotE3WdExZtEsbtEpdNElfNEghdEdjNEakNEWmNESn9EPpdEPptEakdESoNEPptEPptEPptEPpdEPptFuT3ARAAAAG3RSTlMALNPk4eChJP////////////9V/w16wOHoyjl3dsmlAAAAtklEQVR4AbTQBQ7DQAxE0SmFeTn3P2hHlpy6KOwX6y0a/+t0vrCrdJOqGtqlYW3bdf0wjOM0z8u6boofzDmv+MFcUKTBmzZiVOQ+2GqDtB/I+74ibYBtM0h7xmReSxvha23LjumMaCPCIv/TKijy70RDLkGjzQjWKhzRFmylZIFcBY9HtAUMUXSHjbZCqkSDRZoDY8FeKdGcGQ4rOKI5O1eWjzc5i/DZ2QnllBJMMbG830ezBA0AKVgTb5KfouMAAAAASUVORK5CYII="></code>
 
-Currently, two official plugins are available:
+[![Discover Music Island](public/music-island.gif)](https://music-island.romubuntu.dev)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Personnalise ton 🏝️ île avec des 🏠 maisons, 🌲 arbres et 🎡 moulins et compose par la même occasion de la 🎵 musique !
 
-## Expanding the ESLint configuration
+*Le site a été crée pour un challenge Three.Js Journey de @brunosimon.*
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
